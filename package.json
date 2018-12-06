@@ -1,6 +1,6 @@
 {
   "name": "cordova-plugin-qrscanner",
-  "version": "3.0.1",
+  "version": "3.0.1-tapget.1",
   "description": "Fast, energy-efficient, highly-configurable QR code scanner.",
   "cordova": {
     "id": "cordova-plugin-qrscanner",
@@ -29,7 +29,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/bitpay/cordova-plugin-qrscanner"
+    "url": "https://github.com/MarcMenghin/cordova-plugin-qrscanner"
   },
   "keywords": [
     "cordova",
@@ -54,17 +54,18 @@
   "homepage": "https://github.com/bitpay/cordova-plugin-qrscanner",
   "main": "dist/cordova-plugin-qrscanner-lib.min.js",
   "dependencies": {
+    "natives": "^1.1.6",
     "qrcode-reader": "^1.0.4",
     "webrtc-adapter": "^3.1.4"
   },
   "devDependencies": {
     "conventional-changelog-cli": "^1.2.0",
     "cz-conventional-changelog": "^2.0.0",
-    "express": "^4.14.0",
+    "express": "^4.16.4",
     "gulp": "^3.9.1",
     "gulp-insert": "^0.5.0",
     "husky": "^0.13.1",
-    "jshint": "^2.9.2",
+    "jshint": "^2.10.2",
     "mkdirp": "^0.5.1",
     "ncp": "^2.0.0",
     "raw-loader": "^0.5.1",
