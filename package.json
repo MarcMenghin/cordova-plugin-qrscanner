@@ -1,6 +1,6 @@
 {
   "name": "cordova-plugin-qrscanner",
-  "version": "3.0.1-tapget.1",
+  "version": "3.0.1-tapget.2",
   "description": "Fast, energy-efficient, highly-configurable QR code scanner.",
   "cordova": {
     "id": "cordova-plugin-qrscanner",
@@ -55,7 +55,9 @@
   "main": "dist/cordova-plugin-qrscanner-lib.min.js",
   "dependencies": {
     "natives": "^1.1.6",
+    "nopt": "^4.0.3",
     "qrcode-reader": "^1.0.4",
+    "shelljs": "^0.8.4",
     "webrtc-adapter": "^3.1.4"
   },
   "devDependencies": {
