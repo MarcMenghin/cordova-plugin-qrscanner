@@ -135,151 +135,151 @@ function onPreviewClick(e) {
 let qrScanner = {};
 
 qrScanner.getStatus = function () {
-  return init().then(generateStatusResponse, generateStatusResponse);
-}
+    return init().then(generateStatusResponse, generateStatusResponse);
+};
 
 qrScanner.prepare = function () {
-  return init().then(generateStatusResponse);
-}
+    return init().then(generateStatusResponse);
+};
 
 qrScanner.useCamera = function (inputStr) {
-  return init().then(function () {
-    let cameraType = parseInt(inputStr);
-    return initCamera(cameraType).then(function () {
-      return generateStatusResponse();
+    return init().then(function () {
+        let cameraType = parseInt(inputStr);
+        return initCamera(cameraType).then(function () {
+            return generateStatusResponse();
+        });
     });
-  });
-}
+};
 
 qrScanner.show = function () {
-  return init().then(function () {
-    preview.show();
-    statusFlags.showing = true;
-    statusFlags.previewing = preview.isPlaying();
-    return generateStatusResponse();
-  });
-}
+    return init().then(function () {
+        preview.show();
+        statusFlags.showing = true;
+        statusFlags.previewing = preview.isPlaying();
+        return generateStatusResponse();
+    });
+};
 
 qrScanner.hide = function () {
-  return init().then(function () {
-    preview.hide();
-    statusFlags.showing = false;
-    statusFlags.previewing = false;
-    return generateStatusResponse();
-  });
-}
+    return init().then(function () {
+        preview.hide();
+        statusFlags.showing = false;
+        statusFlags.previewing = false;
+        return generateStatusResponse();
+    });
+};
 
 let resolveLastScanPromise, rejectLastScanPromise;
 
 qrScanner.scan = function () {
 
-  if (statusFlags.scanning) {
-    rejectLastScanPromise(errorTypes.SCAN_CANCELED);
+    if (statusFlags.scanning) {
+        rejectLastScanPromise(errorTypes.SCAN_CANCELED);
+
+        let lastScanPromise = new Promise(function (resolve, reject) {
+            resolveLastScanPromise = resolve;
+            rejectLastScanPromise = reject;
+        });
+
+        return lastScanPromise;
+
+    }
 
     let lastScanPromise = new Promise(function (resolve, reject) {
-      resolveLastScanPromise = resolve;
-      rejectLastScanPromise = reject;
+        resolveLastScanPromise = resolve;
+        rejectLastScanPromise = reject;
     });
+
+    init().then(function () {
+        barcodeReader.readCode().then(function (result) {
+            if (!result) {
+                return rejectLastScanPromise(errorTypes.SCAN_CANCELED);
+            }
+            resolveLastScanPromise(result.text);
+            statusFlags.scanning = false;
+        });
+    }, function (error) {
+        statusFlags.scanning = false;
+        return rejectLastScanPromise(error);
+    });
+
+    statusFlags.scanning = true;
 
     return lastScanPromise;
 
-  }
-
-  let lastScanPromise = new Promise(function (resolve, reject) {
-    resolveLastScanPromise = resolve;
-    rejectLastScanPromise = reject;
-  });
-
-  init().then(function () {
-    barcodeReader.readCode().then(function (result) {
-      if (!result) {
-        return rejectLastScanPromise(errorTypes.SCAN_CANCELED);
-      }
-      resolveLastScanPromise(result.text);
-      statusFlags.scanning = false;
-    });
-  }, function (error) {
-    statusFlags.scanning = false;
-    return rejectLastScanPromise(error);
-  });
-
-  statusFlags.scanning = true;
-
-  return lastScanPromise;
-
-}
+};
 
 qrScanner.cancelScan = function () {
-  if (!statusFlags.scanning) return generateStatusResponse();
-  statusFlags.scanning = false;
-  barcodeReader.stop();
-  return generateStatusResponse();
-}
+    if (!statusFlags.scanning) return generateStatusResponse();
+    statusFlags.scanning = false;
+    barcodeReader.stop();
+    return generateStatusResponse();
+};
 
 qrScanner.pausePreview = function () {
-  preview.pause();
-  statusFlags.previewing = false;
-  return generateStatusResponse();
-}
+    preview.pause();
+    statusFlags.previewing = false;
+    return generateStatusResponse();
+};
 
 qrScanner.resumePreview = function () {
-  preview.resume();
-  statusFlags.previewing = statusFlags.showing;
-  return generateStatusResponse();
-}
+    preview.resume();
+    statusFlags.previewing = statusFlags.showing;
+    return generateStatusResponse();
+};
 
 //on Lumia devices, light functionality may be disabled while plugged in
 qrScanner.enableLight = function () {
-  return init().then(function () {
-    if (statusFlags.lightEnabled) {
-      return generateStatusResponse();
-		}
+    return init().then(function () {
+        if (statusFlags.lightEnabled) {
+            return generateStatusResponse();
+        }
 
-		currentVideoCapture.enableLight();
-    statusFlags.lightEnabled = true;
+        currentVideoCapture.enableLight();
+        statusFlags.lightEnabled = true;
 
-    if (!statusFlags.lightEnabled) {
-      return Promise.wrapError(errorTypes.LIGHT_UNAVAILABLE);
-    }
+        if (!statusFlags.lightEnabled) {
+            return Promise.wrapError(errorTypes.LIGHT_UNAVAILABLE);
+        }
 
-    return generateStatusResponse();
-  });
-}
+        return generateStatusResponse();
+    });
+};
 
 qrScanner.disableLight = function () {
 
-  if (statusFlags.lightEnabled) {
-		currentVideoCapture.disableLight();
+    if (statusFlags.lightEnabled) {
+        currentVideoCapture.disableLight();
 
-		statusFlags.lightEnabled = false;
-	}
+        statusFlags.lightEnabled = false;
+    }
 
-  return generateStatusResponse();
+    return generateStatusResponse();
 
-}
+};
 
 qrScanner.openSettings = function () {
-  return Promise.wrapError(errorTypes.OPEN_SETTINGS_UNAVAILABLE);
-}
+    return Promise.wrapError(errorTypes.OPEN_SETTINGS_UNAVAILABLE);
+};
 
 qrScanner.destroy = function () {
-  reset();
-  return generateStatusResponse();
-}
+    reset();
+    return generateStatusResponse();
+};
 
 reset();
 
 function wrapPromise(fn) {
-  return function (successCallback, errorCallback, strInput) {
-    fn.call(window, strInput).then(successCallback, function (errorCode) {
-      errorCallback(errorCode.toString() || '0');
-    });
-  }
+    return function (successCallback, errorCallback, strInput) {
+        fn.call(window, strInput).then(successCallback, function (errorCode) {
+            errorCallback(errorCode.toString() || '0');
+        });
+    };
 }
 
 for (let property in qrScanner) {
-  if (typeof qrScanner[property] == "function") {
-    exports[property] = wrapPromise(qrScanner[property])
+  if (typeof qrScanner[property] === "function") {
+      exports[property] = wrapPromise(qrScanner[property]);
   }
 }
 

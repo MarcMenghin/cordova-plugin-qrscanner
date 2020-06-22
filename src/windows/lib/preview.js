@@ -38,51 +38,51 @@ function ensurePreviewInitialized() {
 }
 
 exports.setVideoUrl = function (videoUrl) {
-  ensurePreviewInitialized();
-  _.preview.capturePreview.src = videoUrl;
-}
+    ensurePreviewInitialized();
+    _.preview.capturePreview.src = videoUrl;
+};
 
 exports.show = function () {
-  ensurePreviewInitialized();
-  if (!_.preview.capturePreviewFrame) {
-    return;
-  }
+    ensurePreviewInitialized();
+    if (!_.preview.capturePreviewFrame) {
+        return;
+    }
 
-  _.preview.capturePreview.play();
-  _.preview.capturePreviewFrame.style.visibility = 'visible';
-}
+    _.preview.capturePreview.play();
+    _.preview.capturePreviewFrame.style.visibility = 'visible';
+};
 
 exports.hide = function () {
-  ensurePreviewInitialized();
-  if (!_.preview.capturePreviewFrame) {
-    return;
-  }
+    ensurePreviewInitialized();
+    if (!_.preview.capturePreviewFrame) {
+        return;
+    }
 
-  _.preview.capturePreviewFrame.style.visibility = 'hidden';
-  _.preview.capturePreview.pause();
-}
+    _.preview.capturePreviewFrame.style.visibility = 'hidden';
+    _.preview.capturePreview.pause();
+};
 
 exports.pause = function () {
-  ensurePreviewInitialized();
-  _.preview.capturePreview.pause();
-}
+    ensurePreviewInitialized();
+    _.preview.capturePreview.pause();
+};
 
 exports.resume = function () {
-  ensurePreviewInitialized();
-  _.preview.capturePreview.play();
-}
+    ensurePreviewInitialized();
+    _.preview.capturePreview.play();
+};
 
 exports.isPlaying = function () {
-  if (!_.preview) return false;
-  return !_.preview.capturePreview.paused;
-}
+    if (!_.preview) return false;
+    return !_.preview.capturePreview.paused;
+};
 
 exports.destroy = function () {
-  if (_.preview) {
-    document.head.removeChild(_.preview.capturePreviewFrameStyle);
-    document.body.removeChild(_.preview.capturePreviewFrame);
-    delete _.preview;
-  }
-}
+    if (_.preview) {
+        document.head.removeChild(_.preview.capturePreviewFrameStyle);
+        document.body.removeChild(_.preview.capturePreviewFrame);
+        delete _.preview;
+    }
+};
 
 module.exports = exports;
