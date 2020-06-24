@@ -3,6 +3,7 @@
 const gulp = require('gulp');
 const insert = require('gulp-insert');
 const fs= require('fs');
+const { doesNotMatch } = require('assert');
 
 const remap = fs.readFileSync('src/common/src/cordova-remap.js', 'utf-8');
 
@@ -16,15 +17,15 @@ function webpack(config, callback){
 }
 
 gulp.task('prepack', function(cb){
-  webpack('webpack.prepack.config.js', cb);
+  return webpack('webpack.prepack.config.js', cb);
 });
 
 gulp.task('webpack-cordova', gulp.series('prepack', function(cb){
-  webpack('webpack.cordova.config.js', cb);
+  return webpack('webpack.cordova.config.js', cb);
 }));
 
 gulp.task('dist', gulp.series('prepack', function(cb){
-  webpack('webpack.library.config.js', cb);
+  return webpack('webpack.library.config.js', cb);
 }));
 
 gulp.task('remap', gulp.series('webpack-cordova', function () {
