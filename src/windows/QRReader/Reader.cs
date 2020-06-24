@@ -88,7 +88,7 @@ namespace QRReader
 					{
 						videoFrame = await capture.GetPreviewFrameAsync(videoFrameConfig);
 					}
-					catch (Exception ex)
+					catch (Exception)
 					{
 						return null; //device not ready
 					}
