@@ -58,7 +58,7 @@
     "nopt": "^4.0.3",
     "qrcode-reader": "^1.0.4",
     "shelljs": "^0.8.4",
-    "webrtc-adapter": "^7.6.2"
+    "webrtc-adapter": "^7.6.3"
   },
   "devDependencies": {
     "conventional-changelog-cli": "^2.0.34",
@@ -73,7 +73,8 @@
     "raw-loader": "^4.0.1",
     "trash-cli": "^3.0.0",
     "validate-commit-msg": "^2.14.0",
-    "webpack": "^4.43.0"
+    "webpack": "^4.43.0",
+    "webpack-cli": "^3.3.12"
   },
   "config": {
     "commitizen": {

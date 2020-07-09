@@ -13,10 +13,7 @@ module.exports = {
     libraryTarget: 'umd',
     umdNamedDefine: true
   },
-  plugins: [
-    new webpack.optimize.UglifyJsPlugin({
-      comments: false,
-      sourceMap: true
-    })
-  ]
+  optimization: {
+    minimize: true
+  }
 };
