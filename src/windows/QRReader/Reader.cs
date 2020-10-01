@@ -8,7 +8,6 @@
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
  */
 
-using Windows.UI.Xaml.Media.Imaging;
 
 namespace QRReader
 {
@@ -45,7 +44,7 @@ namespace QRReader
             this.capture = capture;
         }
 
-        public IAsyncOperation<Result> ReadCode()
+        public IAsyncOperation<string> ReadCode()
         {
             cancelSearch = new CancellationTokenSource();
             return Read().AsAsyncOperation();
@@ -56,7 +55,7 @@ namespace QRReader
             cancelSearch.Cancel();
         }
 
-        private async Task<Result> Read()
+        private async Task<string> Read()
         {
             Result result = null;
             try
@@ -68,7 +67,7 @@ namespace QRReader
             }
             catch (OperationCanceledException) { }
 
-            return result;
+            return result?.Text;
         }
 
         private async Task<Result> GetCameraImage(CancellationToken cancelToken)
@@ -92,17 +91,7 @@ namespace QRReader
                 return null; //device not ready
             }
 
-            var result =
-        await
-            Task.Run(
-                () =>
-                {
-                    WriteableBitmap bitmap = new WriteableBitmap(videoFrame.SoftwareBitmap.PixelWidth, videoFrame.SoftwareBitmap.PixelHeight);
-                    videoFrame.SoftwareBitmap.CopyToBuffer(bitmap.PixelBuffer);
-                    return barcodeReader.DecodeBitmap(bitmap);
-                },
-                cancelToken);
-
+            var result = await Task.Run(() => barcodeReader.Decode(videoFrame.SoftwareBitmap), cancelToken);
             return result;
         }
     }

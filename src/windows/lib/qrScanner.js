@@ -195,7 +195,7 @@ qrScanner.scan = function () {
             if (!result) {
                 return rejectLastScanPromise(errorTypes.SCAN_CANCELED);
             }
-            resolveLastScanPromise(result.text);
+            resolveLastScanPromise(result);
             statusFlags.scanning = false;
         });
     }, function (error) {
