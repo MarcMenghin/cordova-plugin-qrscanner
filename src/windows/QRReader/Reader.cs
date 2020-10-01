@@ -8,10 +8,11 @@
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
  */
 
+using Windows.UI.Xaml.Media.Imaging;
+
 namespace QRReader
 {
     using System;
-    using System.Runtime.InteropServices;
     using System.Threading;
     using System.Threading.Tasks;
 
@@ -27,11 +28,9 @@ namespace QRReader
         private BarcodeReader barcodeReader;
         private CancellationTokenSource cancelSearch;
         private MediaCapture capture;
-        private ImageEncodingProperties encodingProps;
 
         public Reader()
         {
-            encodingProps = ImageEncodingProperties.CreateJpeg();
             barcodeReader = new BarcodeReader
             {
                 Options = {
@@ -49,12 +48,12 @@ namespace QRReader
         public IAsyncOperation<Result> ReadCode()
         {
             cancelSearch = new CancellationTokenSource();
-            return this.Read().AsAsyncOperation();
+            return Read().AsAsyncOperation();
         }
 
         public void Stop()
         {
-            this.cancelSearch.Cancel();
+            cancelSearch.Cancel();
         }
 
         private async Task<Result> Read()
@@ -79,25 +78,30 @@ namespace QRReader
                 throw new OperationCanceledException(cancelToken);
             }
 
-            var previewProperties = this.capture.VideoDeviceController.GetMediaStreamProperties(MediaStreamType.VideoPreview) as VideoEncodingProperties;
+            var previewProperties = capture.VideoDeviceController.GetMediaStreamProperties(MediaStreamType.VideoPreview) as VideoEncodingProperties;
 
             var videoFrameConfig = new VideoFrame(BitmapPixelFormat.Bgra8, (int)previewProperties.Width, (int)previewProperties.Height);
 
-					VideoFrame videoFrame;
-					try
-					{
-						videoFrame = await capture.GetPreviewFrameAsync(videoFrameConfig);
-					}
-					catch (Exception)
-					{
-						return null; //device not ready
-					}
+            VideoFrame videoFrame;
+            try
+            {
+                videoFrame = await capture.GetPreviewFrameAsync(videoFrameConfig);
+            }
+            catch (Exception)
+            {
+                return null; //device not ready
+            }
 
-					var result =
-                await
-                    Task.Run(
-                        () => barcodeReader.Decode(videoFrame.SoftwareBitmap),
-                        cancelToken);
+            var result =
+        await
+            Task.Run(
+                () =>
+                {
+                    WriteableBitmap bitmap = new WriteableBitmap(videoFrame.SoftwareBitmap.PixelWidth, videoFrame.SoftwareBitmap.PixelHeight);
+                    videoFrame.SoftwareBitmap.CopyToBuffer(bitmap.PixelBuffer);
+                    return barcodeReader.DecodeBitmap(bitmap);
+                },
+                cancelToken);
 
             return result;
         }
