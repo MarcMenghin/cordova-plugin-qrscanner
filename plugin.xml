@@ -60,6 +60,7 @@
       <runs/>
     </js-module>
     <framework src="src/windows/QRReader/QRReader.csproj" custom="true" type="projectReference"/>
+    <framework src="src/windows/QRReader/lib/zxing.winmd" custom="true"/>
     <asset src="src/windows/lib/preview.css" target="css/plugin-qrscanner-preview.css" />
     <hook src="hooks/windows/check-arch.js" type="before_compile" />
     <hook src="hooks/windows/check-arch.js" type="before_run" />
