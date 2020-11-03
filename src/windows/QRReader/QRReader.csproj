@@ -111,11 +111,13 @@
     <Compile Include="VideoCapture.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="zxing">
+      <HintPath>lib\zxing.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
       <Version>5.3.10</Version>
-    </PackageReference>
-    <PackageReference Include="ZXing.Net">
-      <Version>0.16.5</Version>
     </PackageReference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
